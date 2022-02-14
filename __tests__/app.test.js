@@ -2,10 +2,13 @@ const request = require("supertest");
 const app = require("../app.js");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data/index");
+const db = require("../db/connection");
 
 beforeEach(() => {
 	return seed(data);
 });
+
+afterAll(() => db.end());
 
 describe("app", () => {
 	describe("GET Request - /api/topics", () => {

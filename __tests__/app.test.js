@@ -43,5 +43,13 @@ describe("app", () => {
 					});
 				});
 		});
+		test("Status: 404, responds with 'Bad Request - Path Not Found'", () => {
+			return request(app)
+				.get("/api/no-endpoint")
+				.expect(404)
+				.then(({ body: { message } }) => {
+					expect(message).toBe("Bad Request - Path Not Found");
+				});
+		});
 	});
 });

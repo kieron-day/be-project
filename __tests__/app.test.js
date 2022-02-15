@@ -12,30 +12,11 @@ afterAll(() => db.end());
 
 describe("app", () => {
 	describe("GET Request - /api/topics", () => {
-		test("Status: 200", () => {
-			return request(app).get("/api/topics").expect(200);
-		});
-		test("Status: 200, responds with an array", () => {
-			return request(app)
-				.get("/api/topics")
-				.expect(200)
-				.then(({ body: { topics } }) => {
-					expect.any(Array.isArray(topics) === true);
-				});
-		});
-		test("Status: 200, responds with array with 3 elements", () => {
-			return request(app)
-				.get("/api/topics")
-				.expect(200)
-				.then(({ body: { topics } }) => {
-					expect(topics).toHaveLength(3);
-				});
-		});
 		test("Status: 200, responds with array of topic objects", () => {
 			return request(app)
 				.get("/api/topics")
-				.expect(200)
 				.then(({ body: { topics } }) => {
+					expect(topics).toHaveLength(3);
 					topics.forEach((topic) => {
 						expect(topic).toEqual(
 							expect.objectContaining({

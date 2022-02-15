@@ -1,0 +1,39 @@
+const request = require("supertest");
+const app = require("../app.js");
+const seed = require("../db/seeds/seed");
+const data = require("../db/data/test-data/index");
+const db = require("../db/connection");
+
+beforeEach(() => {
+	return seed(data);
+});
+
+afterAll(() => db.end());
+
+describe("app", () => {
+	describe("GET Request - /api/topics", () => {
+		test("Status: 200, responds with array of topic objects", () => {
+			return request(app)
+				.get("/api/topics")
+				.then(({ body: { topics } }) => {
+					expect(topics).toHaveLength(3);
+					topics.forEach((topic) => {
+						expect(topic).toEqual(
+							expect.objectContaining({
+								slug: expect.any(String),
+								description: expect.any(String),
+							})
+						);
+					});
+				});
+		});
+		test("Status: 404, responds with 'Bad Request - Path Not Found'", () => {
+			return request(app)
+				.get("/api/no-endpoint")
+				.expect(404)
+				.then(({ body: { message } }) => {
+					expect(message).toBe("Bad Request - Path Not Found");
+				});
+		});
+	});
+});

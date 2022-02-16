@@ -1,5 +1,5 @@
 exports.errorPathNotFound = (req, res) => {
-	res.status(404).send({ message: "Bad Request - Path Not Found" });
+	res.status(404).send({ message: "Path Not Found" });
 };
 
 exports.errorCustom = (err, req, res, next) => {

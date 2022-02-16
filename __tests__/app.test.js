@@ -17,7 +17,7 @@ describe("app", () => {
 				.get("/api/no-endpoint")
 				.expect(404)
 				.then(({ body: { message } }) => {
-					expect(message).toBe("Bad Request - Path Not Found");
+					expect(message).toBe("Path Not Found");
 				});
 		});
 	});

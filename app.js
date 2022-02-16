@@ -1,12 +1,22 @@
 const express = require("express");
 const { getTopics } = require("./controllers/topics.controllers");
+const { getArticleById } = require("./controllers/articles.controllers");
+const {
+	errorPathNotFound,
+	errorCustom,
+	errorPsql,
+	error500s,
+} = require("./controllers/error.controllers");
 
 const app = express();
 
-app.get("/api/topics", getTopics);
+app.use(express.json());
 
-app.get("/*", (req, res) => {
-	res.status(404).send({ message: "Bad Request - Path Not Found" });
-});
+app.get("/api/topics", getTopics);
+app.get("/api/articles/:article_id", getArticleById);
+app.get("/*", errorPathNotFound);
+app.use(errorCustom);
+app.use(errorPsql);
+app.use(error500s);
 
 module.exports = app;

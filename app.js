@@ -1,6 +1,9 @@
 const express = require("express");
 const { getTopics } = require("./controllers/topics.controllers");
-const { getArticleById } = require("./controllers/articles.controllers");
+const {
+	getArticleById,
+	patchArticleById,
+} = require("./controllers/articles.controllers");
 const {
 	errorPathNotFound,
 	errorCustom,
@@ -11,10 +14,10 @@ const {
 const app = express();
 
 app.use(express.json());
-
 app.get("/api/topics", getTopics);
 app.get("/api/articles/:article_id", getArticleById);
-app.get("/*", errorPathNotFound);
+app.patch("/api/articles/:article_id", patchArticleById);
+app.all("/*", errorPathNotFound);
 app.use(errorCustom);
 app.use(errorPsql);
 app.use(error500s);

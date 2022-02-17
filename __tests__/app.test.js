@@ -70,6 +70,20 @@ describe("app", () => {
 					});
 				});
 		});
+		test("Status 200 - articles have a comment_count property showing number of comments on article", () => {
+			return request(app)
+				.get("/api/articles")
+				.expect(200)
+				.then(({ body: { articles } }) => {
+					articles.forEach((article) => {
+						expect(article).toEqual(
+							expect.objectContaining({
+								comment_count: expect.any(Number),
+							})
+						);
+					});
+				});
+		});
 	});
 	describe("GET Request - /api/articles/:article_id", () => {
 		test("Status: 200, responds with correct article object", () => {

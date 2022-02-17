@@ -21,6 +21,20 @@ exports.fetchArticleById = (articleId) => {
 		});
 };
 
+exports.fetchArticleCommentsById = (articleId) => {
+	return db
+		.query(
+			"SELECT comment_id, votes, created_at, author, body FROM comments WHERE article_id = $1;",
+			[articleId]
+		)
+		.then(({ rows: comments }) => {
+			if (comments.length === 0) {
+				return Promise.reject({ message: "No comments found", status: 404 });
+			}
+			return comments;
+		});
+};
+
 exports.updateArticleById = (articleId, incVotes) => {
 	return db
 		.query(

@@ -1,6 +1,7 @@
 const {
 	fetchArticles,
 	fetchArticleById,
+	fetchArticleCommentsById,
 	updateArticleById,
 } = require("../models/articles.models");
 
@@ -13,7 +14,6 @@ exports.getArticles = (req, res, next) => {
 			next(err);
 		});
 };
-
 exports.getArticleById = (req, res, next) => {
 	const articleId = req.params.article_id;
 	fetchArticleById(articleId)
@@ -24,7 +24,16 @@ exports.getArticleById = (req, res, next) => {
 			next(err);
 		});
 };
-
+exports.getArticleCommentsById = (req, res, next) => {
+	const articleId = req.params.article_id;
+	fetchArticleCommentsById(articleId)
+		.then((comments) => {
+			res.status(200).send({ comments });
+		})
+		.catch((err) => {
+			next(err);
+		});
+};
 exports.patchArticleById = (req, res, next) => {
 	const articleId = req.params.article_id;
 	const incVotes = req.body.inc_votes;

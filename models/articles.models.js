@@ -12,7 +12,10 @@ exports.fetchArticles = () => {
 
 exports.fetchArticleById = (articleId) => {
 	return db
-		.query("SELECT * FROM articles WHERE article_id = $1;", [articleId])
+		.query(
+			"SELECT articles.*, COUNT(comments.comment_id)::INT AS comment_count FROM articles LEFT JOIN comments USING (article_id) WHERE article_id = $1 GROUP BY articles.article_id;",
+			[articleId]
+		)
 		.then(({ rows: article }) => {
 			if (article.length === 0) {
 				return Promise.reject({ message: "Article Not Found", status: 404 });

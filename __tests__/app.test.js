@@ -90,6 +90,14 @@ describe("app", () => {
 					);
 				});
 		});
+		test("Status: 200, responds with article object with corresponding comment_count property", () => {
+			return request(app)
+				.get("/api/articles/1")
+				.expect(200)
+				.then(({ body: { article } }) => {
+					expect(article.comment_count).toBe(11);
+				});
+		});
 		test("Status: 400, responds with error message for invalid article_id", () => {
 			return request(app)
 				.get("/api/articles/wrong-endpoint-type")
@@ -121,6 +129,9 @@ describe("app", () => {
 							})
 						);
 					});
+				});
+		});
+	});
 	describe("PATCH Request - /api/articles/:article_id", () => {
 		test("Status: 200, responds with correct article object", () => {
 			return request(app)

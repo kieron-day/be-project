@@ -28,9 +28,6 @@ exports.fetchArticleCommentsById = (articleId) => {
 			[articleId]
 		)
 		.then(({ rows: comments }) => {
-			if (comments.length === 0) {
-				return Promise.reject({ message: "No comments found", status: 404 });
-			}
 			return comments;
 		});
 };

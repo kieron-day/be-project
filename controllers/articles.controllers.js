@@ -26,7 +26,11 @@ exports.getArticleById = (req, res, next) => {
 };
 exports.getArticleCommentsById = (req, res, next) => {
 	const articleId = req.params.article_id;
-	fetchArticleCommentsById(articleId)
+	const isArticleFound = fetchArticleById(articleId);
+	return Promise.all([articleId, isArticleFound])
+		.then(([articleId]) => {
+			return fetchArticleCommentsById(articleId);
+		})
 		.then((comments) => {
 			res.status(200).send({ comments });
 		})

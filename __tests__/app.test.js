@@ -127,12 +127,20 @@ describe("app", () => {
 					});
 				});
 		});
-		test("Status: 404, responds with error if no comments found", () => {
+		test("Status: 200, responds with empty array if no comments found", () => {
 			return request(app)
 				.get("/api/articles/2/comments")
+				.expect(200)
+				.then(({ body: { comments } }) => {
+					expect(comments.length).toBe(0);
+				});
+		});
+		test("Status: 404, responds with error if valid but non-existant article", () => {
+			return request(app)
+				.get("/api/articles/999999/comments")
 				.expect(404)
 				.then(({ body: { message } }) => {
-					expect(message).toBe("No comments found");
+					expect(message).toBe("Article Not Found");
 				});
 		});
 	});

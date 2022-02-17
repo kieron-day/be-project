@@ -53,11 +53,20 @@ describe("app", () => {
 								title: expect.any(String),
 								topic: expect.any(String),
 								author: expect.any(String),
-								body: expect.any(String),
 								created_at: expect.any(String),
 								votes: expect.any(Number),
 							})
 						);
+					});
+				});
+		});
+		test("Status: 200, articles are sorted by created_at, descending by default", () => {
+			return request(app)
+				.get("/api/articles")
+				.expect(200)
+				.then(({ body: { articles } }) => {
+					expect(articles).toBeSortedBy("created_at", {
+						descending: true,
 					});
 				});
 		});

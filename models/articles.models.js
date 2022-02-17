@@ -1,5 +1,11 @@
 const db = require("../db/connection");
 
+exports.fetchArticles = () => {
+	return db.query("SELECT * FROM articles;").then(({ rows: articles }) => {
+		return articles;
+	});
+};
+
 exports.fetchArticleById = (articleId) => {
 	return db
 		.query("SELECT * FROM articles WHERE article_id = $1;", [articleId])

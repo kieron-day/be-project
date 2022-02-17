@@ -75,4 +75,45 @@ describe("app", () => {
 				});
 		});
 	});
+	describe("PATCH Request - /api/articles/:article_id", () => {
+		test("Status: 200, responds with correct article object", () => {
+			return request(app)
+				.patch("/api/articles/1")
+				.send({ inc_votes: 5 })
+				.expect(200)
+				.then(({ body: { updatedArticle } }) => {
+					expect(updatedArticle).toEqual(
+						expect.objectContaining({
+							article_id: 1,
+							title: "Living in the shadow of a great man",
+							topic: "mitch",
+							author: "butter_bridge",
+							body: "I find this existence challenging",
+							created_at: expect.any(String),
+							votes: 105,
+						})
+					);
+				});
+		});
+		test("Status 400 - Invalid request body used for patch", () => {
+			const body = { inc_votes: "Not a number" };
+			return request(app)
+				.patch("/api/articles/1")
+				.send(body)
+				.expect(400)
+				.then(({ body: { message } }) => {
+					expect(message).toBe("Bad Request");
+				});
+		});
+		test("Status 400 - Invalid request body used for patch", () => {
+			const body = { inc_votes: "Not a number" };
+			return request(app)
+				.patch("/api/articles/1")
+				.send(body)
+				.expect(400)
+				.then(({ body: { message } }) => {
+					expect(message).toBe("Bad Request");
+				});
+		});
+	});
 });

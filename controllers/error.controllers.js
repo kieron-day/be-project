@@ -13,5 +13,6 @@ exports.errorPsql = (err, req, res, next) => {
 };
 
 exports.error500s = (err, req, res, next) => {
+	console.log(err);
 	res.status(500).send({ message: "Server Error" });
 };

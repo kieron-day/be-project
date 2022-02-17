@@ -75,4 +75,23 @@ describe("app", () => {
 				});
 		});
 	});
+	describe("GET Request - /api/users", () => {
+		test("Status: 200, responds with array of user objects", () => {
+			return request(app)
+				.get("/api/users")
+				.expect(200)
+				.then(({ body: { users } }) => {
+					expect(users).toHaveLength(4);
+					users.forEach((user) => {
+						expect(user).toEqual(
+							expect.objectContaining({
+								username: expect.any(String),
+								name: expect.any(String),
+								avatar_url: expect.any(String),
+							})
+						);
+					});
+				});
+		});
+	});
 });

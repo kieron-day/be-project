@@ -81,8 +81,8 @@ describe("app", () => {
 				.patch("/api/articles/1")
 				.send({ inc_votes: 5 })
 				.expect(200)
-				.then(({ body: { updatedArticle } }) => {
-					expect(updatedArticle).toEqual(
+				.then(({ body: { article } }) => {
+					expect(article).toEqual(
 						expect.objectContaining({
 							article_id: 1,
 							title: "Living in the shadow of a great man",
@@ -93,16 +93,6 @@ describe("app", () => {
 							votes: 105,
 						})
 					);
-				});
-		});
-		test("Status 400 - Invalid request body used for patch", () => {
-			const body = { inc_votes: "Not a number" };
-			return request(app)
-				.patch("/api/articles/1")
-				.send(body)
-				.expect(400)
-				.then(({ body: { message } }) => {
-					expect(message).toBe("Bad Request");
 				});
 		});
 		test("Status 400 - Invalid request body used for patch", () => {

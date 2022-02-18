@@ -9,7 +9,6 @@ exports.fetchArticles = () => {
 			return articles;
 		});
 };
-
 exports.fetchArticleById = (articleId) => {
 	return db
 		.query(
@@ -23,7 +22,6 @@ exports.fetchArticleById = (articleId) => {
 			return article[0];
 		});
 };
-
 exports.fetchCommentsByArticleId = (articleId) => {
 	return db
 		.query(
@@ -34,7 +32,20 @@ exports.fetchCommentsByArticleId = (articleId) => {
 			return comments;
 		});
 };
-
+exports.insertCommentByArticleId = (
+	articleId,
+	commentUsername,
+	commentBody
+) => {
+	return db
+		.query(
+			"INSERT INTO comments (article_id, author, body) VALUES ($1, $2, $3) RETURNING *;",
+			[articleId, commentUsername, commentBody]
+		)
+		.then(({ rows: comment }) => {
+			return comment[0];
+		});
+};
 exports.updateArticleById = (articleId, incVotes) => {
 	return db
 		.query(

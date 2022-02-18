@@ -170,6 +170,61 @@ describe("app", () => {
 					});
 			});
 		});
+		describe("POST Request - /api/articles/:article_id/comments", () => {
+			test("Status: 201, responds with posted comment", () => {
+				return request(app)
+					.post("/api/articles/1/comments")
+					.send({ username: "butter_bridge", body: "This is a test comment." })
+					.expect(201)
+					.then(({ body: { comment } }) => {
+						expect(comment).toEqual(
+							expect.objectContaining({
+								comment_id: expect.any(Number),
+								votes: expect.any(Number),
+								created_at: expect.any(String),
+								author: "butter_bridge",
+								body: "This is a test comment.",
+							})
+						);
+					});
+			});
+			test("Status: 400, error if no username is provided", () => {
+				return request(app)
+					.post("/api/articles/1/comments")
+					.send({ body: "No username provided" })
+					.expect(400)
+					.then(({ body: { message } }) => {
+						expect(message).toBe("Missing A Required Field");
+					});
+			});
+			test("Status: 400, error if no body is provided", () => {
+				return request(app)
+					.post("/api/articles/1/comments")
+					.send({ username: "butter_bridge" })
+					.expect(400)
+					.then(({ body: { message } }) => {
+						expect(message).toBe("Missing A Required Field");
+					});
+			});
+			test("Status: 400, error if article_id is incorrect format", () => {
+				return request(app)
+					.post("/api/articles/not-a-number/comments")
+					.send({ username: "butter_bridge", body: "This is a test comment." })
+					.expect(400)
+					.then(({ body: { message } }) => {
+						expect(message).toBe("Bad Request");
+					});
+			});
+			test("Status: 400, error if article_id is incorrect format", () => {
+				return request(app)
+					.post("/api/articles/12345/comments")
+					.send({ username: "butter_bridge", body: "This is a test comment." })
+					.expect(404)
+					.then(({ body: { message } }) => {
+						expect(message).toBe("Article Not Found");
+					});
+			});
+		});
 		describe("PATCH Request - /api/articles/:article_id", () => {
 			test("Status: 200, responds with correct article object", () => {
 				return request(app)

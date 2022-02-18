@@ -4,6 +4,7 @@ const { getUsers } = require("./controllers/users.controllers");
 const {
 	getArticles,
 	getArticleById,
+	getArticleCommentsById,
 	patchArticleById,
 } = require("./controllers/articles.controllers");
 
@@ -24,8 +25,11 @@ app.get("/api/topics", getTopics);
 // Articles
 app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id", getArticleById);
-app.get("/api/users", getUsers);
+app.get("/api/articles/:article_id/comments", getArticleCommentsById);
 app.patch("/api/articles/:article_id", patchArticleById);
+
+//Users
+app.get("/api/users", getUsers);
 
 //Error Handling
 app.all("/*", errorPathNotFound);

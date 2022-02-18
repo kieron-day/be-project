@@ -130,6 +130,43 @@ describe("app", () => {
 				});
 		});
 	});
+	describe("GET Request - /api/articles/:article_id/comments", () => {
+		test("Status: 200, responds with array of comments for given article_id", () => {
+			return request(app)
+				.get("/api/articles/3/comments")
+				.expect(200)
+				.then(({ body: { comments } }) => {
+					expect(comments).toHaveLength(2);
+					comments.forEach((comment) => {
+						expect(comment).toEqual(
+							expect.objectContaining({
+								comment_id: expect.any(Number),
+								votes: expect.any(Number),
+								created_at: expect.any(String),
+								author: expect.any(String),
+								body: expect.any(String),
+							})
+						);
+					});
+				});
+		});
+		test("Status: 200, responds with empty array if no comments found", () => {
+			return request(app)
+				.get("/api/articles/2/comments")
+				.expect(200)
+				.then(({ body: { comments } }) => {
+					expect(comments.length).toBe(0);
+				});
+		});
+		test("Status: 404, responds with error if valid but non-existant article", () => {
+			return request(app)
+				.get("/api/articles/999999/comments")
+				.expect(404)
+				.then(({ body: { message } }) => {
+					expect(message).toBe("Article Not Found");
+				});
+		});
+	});
 	describe("GET Request - /api/users", () => {
 		test("Status: 200, responds with array of user objects", () => {
 			return request(app)

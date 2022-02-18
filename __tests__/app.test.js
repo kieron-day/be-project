@@ -326,4 +326,37 @@ describe("app", () => {
 			});
 		});
 	});
+	describe("Comments - Endpoint", () => {
+		describe("DELETE Request - /api/comments/:comment_id", () => {
+			test("Status 204 - Success, responds with no content", () => {
+				return request(app)
+					.delete("/api/comments/2")
+					.expect(204)
+					.then(() => {
+						return request(app)
+							.get("/api/articles/1/comments")
+							.expect(200)
+							.then(({ body: { comments } }) => {
+								expect(comments).toHaveLength(10);
+							});
+					});
+			});
+			test("Status 400 - responds with 'Bad Request' if invalid comment_id type", () => {
+				return request(app)
+					.delete("/api/comments/not-an-number")
+					.expect(400)
+					.then(({ body: { message } }) => {
+						expect(message).toBe("Bad Request");
+					});
+			});
+			test("Status 404 - responds with error 'No Comments Found' when valid comment_id does not exist", () => {
+				return request(app)
+					.delete("/api/comments/12345")
+					.expect(404)
+					.then(({ body: { message } }) => {
+						expect(message).toBe("No Comments Found");
+					});
+			});
+		});
+	});
 });

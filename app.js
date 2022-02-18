@@ -8,6 +8,7 @@ const {
 	patchArticleById,
 } = require("./controllers/articles.controllers");
 const { getUsers } = require("./controllers/users.controllers");
+const { deleteCommentById } = require("./controllers/comments.controllers");
 
 const {
 	errorPathNotFound,
@@ -31,6 +32,9 @@ app.patch("/api/articles/:article_id", patchArticleById);
 
 //Users
 app.get("/api/users", getUsers);
+
+//Comments
+app.delete("/api/comments/:comment_id", deleteCommentById);
 
 //Error Handling
 app.all("/*", errorPathNotFound);

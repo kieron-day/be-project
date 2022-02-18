@@ -130,7 +130,7 @@ describe("app", () => {
 						expect(message).toBe("Invalid Sort-By Query");
 					});
 			});
-			test("Status 404 - responds with error object with msg 'No articles found with that topic' when the topic query results in no articles", () => {
+			test("Status 404 - responds with error object with message 'No Articles Found With Topic Provided' when the topic query results in no articles", () => {
 				return request(app)
 					.get("/api/articles?topic=does-not-exist")
 					.expect(404)

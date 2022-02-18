@@ -28,8 +28,7 @@ exports.fetchArticles = (sortBy = "created_at", order = "DESC", topic) => {
 		injectValues.push(`${topic}`);
 	}
 
-	queryBuilder += `GROUP BY articles.article_id ORDER BY ${sortBy} ${order};`;
-
+	queryBuilder += ` GROUP BY articles.article_id ORDER BY ${sortBy} ${order};`;
 	return db.query(queryBuilder, injectValues).then(({ rows: articles }) => {
 		if (articles.length === 0) {
 			return Promise.reject({

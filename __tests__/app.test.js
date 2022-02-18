@@ -88,6 +88,56 @@ describe("app", () => {
 						});
 					});
 			});
+			test("Status 200 - response can by ordered with order query - defaults to descending", () => {
+				return request(app)
+					.get("/api/articles?order=asc")
+					.expect(200)
+					.then(({ body: { articles } }) => {
+						expect(articles).toBeSortedBy("created_at");
+					});
+			});
+			test("Status 200 - response sorted any valid greenlisted column with the sort_by query", () => {
+				return request(app)
+					.get("/api/articles?sort_by=votes")
+					.expect(200)
+					.then(({ body: { articles } }) => {
+						expect(articles).toBeSortedBy("votes", {
+							descending: true,
+						});
+					});
+			});
+			test("Status 200 - response filtered by topic with the topic query", () => {
+				return request(app)
+					.get("/api/articles?topic=cats")
+					.expect(200)
+					.then(({ body: { articles } }) => {
+						expect(articles).toHaveLength(1);
+					});
+			});
+			test("Status 400 - responds with error 'Invalid Order-By Query' when order query is invalid", () => {
+				return request(app)
+					.get("/api/articles?order=invalid")
+					.expect(400)
+					.then(({ body: { message } }) => {
+						expect(message).toBe("Invalid Order-By Query");
+					});
+			});
+			test("Status 400 - responds with error 'Invalid Sort-By Query' when sort_by query is invalid", () => {
+				return request(app)
+					.get("/api/articles?sort_by=invalid-query")
+					.expect(400)
+					.then(({ body: { message } }) => {
+						expect(message).toBe("Invalid Sort-By Query");
+					});
+			});
+			test("Status 404 - responds with error object with message 'No Articles Found With Topic Provided' when the topic query results in no articles", () => {
+				return request(app)
+					.get("/api/articles?topic=does-not-exist")
+					.expect(404)
+					.then(({ body: { message } }) => {
+						expect(message).toBe("No Articles Found With Topic Provided");
+					});
+			});
 		});
 		describe("GET Request - /api/articles/:article_id", () => {
 			test("Status: 200, responds with correct article object", () => {

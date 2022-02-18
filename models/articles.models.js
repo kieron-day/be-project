@@ -1,13 +1,43 @@
 const db = require("../db/connection");
 
-exports.fetchArticles = () => {
-	return db
-		.query(
-			"SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, COUNT(comments.comment_id)::INT AS comment_count FROM articles LEFT JOIN comments USING (article_id) GROUP BY articles.article_id ORDER BY created_at DESC;"
-		)
-		.then(({ rows: articles }) => {
-			return articles;
-		});
+exports.fetchArticles = (sortBy = "created_at", order = "DESC", topic) => {
+	const greenlistSortBy = [
+		"author",
+		"title",
+		"article_id",
+		"topic",
+		"created_at",
+		"votes",
+		"comment_count",
+	];
+	const greenlistOrderBy = ["ASC", "DESC", "asc", "desc"];
+
+	if (!greenlistSortBy.includes(sortBy)) {
+		return Promise.reject({ message: "Invalid Sort-By Query", status: 400 });
+	}
+
+	if (!greenlistOrderBy.includes(order)) {
+		return Promise.reject({ message: "Invalid Order-By Query", status: 400 });
+	}
+
+	let queryBuilder = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, COUNT(comments.comment_id)::INT AS comment_count FROM articles LEFT JOIN comments USING(article_id)`;
+
+	const injectValues = [];
+	if (topic) {
+		queryBuilder += " WHERE topic LIKE $1";
+		injectValues.push(`${topic}`);
+	}
+
+	queryBuilder += ` GROUP BY articles.article_id ORDER BY ${sortBy} ${order};`;
+	return db.query(queryBuilder, injectValues).then(({ rows: articles }) => {
+		if (articles.length === 0) {
+			return Promise.reject({
+				message: "No Articles Found With Topic Provided",
+				status: 404,
+			});
+		}
+		return articles;
+	});
 };
 exports.fetchArticleById = (articleId) => {
 	return db

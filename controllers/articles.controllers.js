@@ -1,7 +1,7 @@
 const {
 	fetchArticles,
 	fetchArticleById,
-	fetchArticleCommentsById,
+	fetchCommentsByArticleId,
 	updateArticleById,
 } = require("../models/articles.models");
 
@@ -24,12 +24,12 @@ exports.getArticleById = (req, res, next) => {
 			next(err);
 		});
 };
-exports.getArticleCommentsById = (req, res, next) => {
+exports.getCommentsByArticleId = (req, res, next) => {
 	const articleId = req.params.article_id;
 	const isArticleFound = fetchArticleById(articleId);
 	return Promise.all([articleId, isArticleFound])
 		.then(([articleId]) => {
-			return fetchArticleCommentsById(articleId);
+			return fetchCommentsByArticleId(articleId);
 		})
 		.then((comments) => {
 			res.status(200).send({ comments });

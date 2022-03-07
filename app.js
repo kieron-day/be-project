@@ -1,5 +1,4 @@
 const cors = require("cors");
-app.use(cors());
 const express = require("express");
 const { getTopics } = require("./controllers/topics.controllers");
 const {
@@ -20,6 +19,7 @@ const {
 } = require("./controllers/error.controllers");
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 // Topics
